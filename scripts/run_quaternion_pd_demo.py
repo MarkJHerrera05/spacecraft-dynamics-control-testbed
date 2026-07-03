@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
+from typing import Dict, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -49,7 +50,7 @@ def closed_loop_attitude_dynamics(
     return np.hstack((q_dot, omega_dot))
 
 
-def run_demo() -> dict[str, np.ndarray | float]:
+def run_demo() -> Dict[str, Union[np.ndarray, float]]:
     """Run the demonstration and return histories for plotting/reporting."""
     inertia_kg_m2 = np.diag([12.0, 10.0, 8.0])
     desired_q = np.array([1.0, 0.0, 0.0, 0.0])
@@ -103,7 +104,7 @@ def run_demo() -> dict[str, np.ndarray | float]:
     }
 
 
-def save_plots(results: dict[str, np.ndarray | float]) -> Path:
+def save_plots(results: Dict[str, Union[np.ndarray, float]]) -> Path:
     """Save attitude-control plots to the figures directory."""
     figures_dir = PROJECT_ROOT / "figures"
     figures_dir.mkdir(parents=True, exist_ok=True)
