@@ -14,7 +14,35 @@ This project is a modular Python simulation environment for spacecraft orbital m
 
 ## Current Version
 
-Version 0.1: Two-body orbit propagation
+Version 0.2: Two-body orbit propagation and closed-loop quaternion PD attitude-control demo
+
+## Implemented Capabilities
+
+- Two-body orbital dynamics model
+- Quaternion utility functions for normalization, multiplication, conjugation, error calculation, kinematics, and angle extraction
+- Euler rigid-body rotational dynamics model
+- Quaternion PD attitude controller with proportional attitude-error feedback, derivative body-rate feedback, and optional torque saturation
+- Closed-loop attitude-control demo that saves convergence plots for attitude error, body rates, control torque, and quaternion history
+
+## Run the Quaternion PD Attitude-Control Demo
+
+From the repository root:
+
+```bash
+python scripts/run_quaternion_pd_demo.py
+```
+
+The script prints final convergence metrics and saves a figure to:
+
+```text
+figures/quaternion_pd_attitude_control.png
+```
+
+The demo is documented in:
+
+```text
+docs/quaternion_pd_attitude_control.md
+```
 
 ## Planned Modules
 
@@ -34,11 +62,17 @@ spacecraft-dynamics-control-testbed/
 ├── src/
 │   ├── orbit/
 │   ├── attitude/
+│   │   ├── quaternion.py
+│   │   └── rigid_body.py
 │   ├── control/
+│   │   └── quaternion_pd.py
 │   └── sensors/
 ├── scripts/
+│   └── run_quaternion_pd_demo.py
 ├── figures/
 ├── docs/
+│   └── quaternion_pd_attitude_control.md
 ├── README.md
 ├── requirements.txt
 └── .gitignore
+```
