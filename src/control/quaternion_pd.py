@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Optional, Union
+
 import numpy as np
 
 from attitude.quaternion import quaternion_error
@@ -20,9 +22,9 @@ class QuaternionPDController:
 
     def __init__(
         self,
-        proportional_gain: float | np.ndarray,
-        derivative_gain: float | np.ndarray,
-        max_torque_nm: float | np.ndarray | None = None,
+        proportional_gain: Union[float, np.ndarray],
+        derivative_gain: Union[float, np.ndarray],
+        max_torque_nm: Optional[Union[float, np.ndarray]] = None,
     ) -> None:
         self.kp = self._as_gain_vector(proportional_gain, "proportional_gain")
         self.kd = self._as_gain_vector(derivative_gain, "derivative_gain")
@@ -32,7 +34,7 @@ class QuaternionPDController:
             self.max_torque_nm = self._as_gain_vector(max_torque_nm, "max_torque_nm")
 
     @staticmethod
-    def _as_gain_vector(value: float | np.ndarray, name: str) -> np.ndarray:
+    def _as_gain_vector(value: Union[float, np.ndarray], name: str) -> np.ndarray:
         value_array = np.asarray(value, dtype=float)
 
         if value_array.ndim == 0:
