@@ -14,15 +14,51 @@ This project is a modular Python simulation environment for spacecraft orbital m
 
 ## Current Version
 
-Version 0.2: Two-body orbit propagation and closed-loop quaternion PD attitude-control demo
+Two-body and J2 orbit propagation with a closed-loop quaternion PD attitude-control demo.
 
 ## Implemented Capabilities
 
-- Two-body orbital dynamics model
+- Two-body orbital dynamics and an optional J2 gravity model for an oblate central body
 - Quaternion utility functions for normalization, multiplication, conjugation, error calculation, kinematics, and angle extraction
 - Euler rigid-body rotational dynamics model
 - Quaternion PD attitude controller with proportional attitude-error feedback, derivative body-rate feedback, and optional torque saturation
 - Closed-loop attitude-control demo that saves convergence plots for attitude error, body rates, control torque, and quaternion history
+
+## Validate the J2 orbit model
+
+From the repository root with the project dependencies installed, run:
+
+```bash
+python -m scripts.run_j2_orbit
+python -m unittest discover -s tests -v
+```
+
+The demo starts both gravity models from the same circular two-body initial
+state at 650 km altitude and 51.6° inclination. It propagates for two days and
+measures the right ascension of the ascending node (RAAN) at each south-to-north
+equator crossing. At a crossing, the spacecraft's inertial longitude equals
+RAAN. Fitting that angle against time measures the drift of the orbital plane.
+
+| Model | RAAN rate (deg/day) |
+| --- | ---: |
+| Two-body baseline | 0.00000 |
+| Two-body + J2 | −4.42455 |
+| First-order secular prediction | −4.40675 |
+
+The negative sign means the ascending node moves west. For the circular
+reference orbit, the first-order rate is `−(3/2) n J2 (R/a)² cos(i)`,
+where `n = sqrt(μ/a³)`. The 0.40% difference is consistent with using the
+initial osculating elements in a first-order, orbit-averaged prediction. The
+tests also check that the direction reverses for a 98° retrograde orbit.
+
+![Measured and predicted RAAN change over two days](figures/j2_nodal_drift.png)
+
+The inertial z-axis follows Earth's fixed symmetry axis. The force model
+includes point-mass gravity and the unnormalized J2 term. Position and radius
+are in km, time is in seconds, and μ is in km³/s².
+
+References: [Cartesian J2 acceleration](https://docs.poliastro.space/en/stable/autoapi/poliastro/core/perturbations/index.html)
+and [first-order nodal rate](https://docs.poliastro.space/en/stable/autoapi/poliastro/twobody/orbit/scalar/index.html).
 
 ## Run the Quaternion PD Attitude-Control Demo
 
